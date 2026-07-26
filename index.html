@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Nut Tracker</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(135deg,#111,#222);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    width:350px;
+    background:#1e1e1e;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(0,0,0,.5);
+}
+
+h1{
+    margin-top:0;
+}
+
+.streak{
+    font-size:50px;
+    font-weight:bold;
+    color:#4ade80;
+    margin:15px 0;
+}
+
+.small{
+    color:#bbb;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    margin-top:10px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+#start{
+    background:#22c55e;
+    color:white;
+}
+
+#reset{
+    background:#ef4444;
+    color:white;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🚫 No Nut Tracker</h1>
+
+    <div class="streak" id="days">0</div>
+    <div class="small">Days Strong 💪</div>
+
+    <button id="start">Start / Restart Streak</button>
+    <button id="reset">❌ Relapse</button>
+
+    <p id="since"></p>
+</div>
+
+<script>
+const startBtn = document.getElementById("start");
+const resetBtn = document.getElementById("reset");
+const daysText = document.getElementById("days");
+const sinceText = document.getElementById("since");
+
+function updateCounter(){
+    const start = localStorage.getItem("nn_start");
+
+    if(!start){
+        daysText.textContent = "0";
+        sinceText.textContent = "Press Start to begin.";
+        return;
+    }
+
+    const startDate = new Date(start);
+    const now = new Date();
+
+    const diff = now - startDate;
+    const days = Math.floor(diff / (1000*60*60*24));
+
+    daysText.textContent = days;
+    sinceText.textContent = "Started: " + startDate.toLocaleDateString();
+}
+
+startBtn.onclick = () =>{
+    localStorage.setItem("nn_start", new Date().toISOString());
+    updateCounter();
+};
+
+resetBtn.onclick = () =>{
+    if(confirm("Reset your streak?")){
+        localStorage.setItem("nn_start", new Date().toISOString());
+        updateCounter();
+    }
+};
+
+updateCounter();
+setInterval(updateCounter,60000);
+</script>
+
+</body>
+</html>
